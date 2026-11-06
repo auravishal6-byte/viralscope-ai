@@ -79,6 +79,9 @@ a{color:#8db8ff}.hidden{display:none}.disclaimer{border-left:3px solid #e8b65b;p
   <p class="hint">YouTube API use hoti hai. YouTube Terms aur Privacy Policy lagu hote hain. <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">YouTube Terms</a> · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy</a></p>
 </main>
 <script>
+// URL of the hosted backend, set once at deploy time (e.g. https://viralscope-ai.onrender.com).
+// Empty string = same origin (used when the server itself serves this page).
+const API_BASE = "https://viralscope-ai.onrender.com";
 const $ = id => document.getElementById(id);
 let currentVideo = null;
 const fmt = n => n == null ? "Hidden" : Number(n).toLocaleString("en-IN");
@@ -93,7 +96,7 @@ $("fetchBtn").addEventListener("click", async () => {
   $("analysisForm").classList.add("hidden");
   $("results").classList.add("hidden");
   try {
-    const response = await fetch(`/api/video?url=${encodeURIComponent(url)}`);
+    const response = await fetch(`${API_BASE}/api/video?url=${encodeURIComponent(url)}`);
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "Video load nahi hua.");
     currentVideo = data;
