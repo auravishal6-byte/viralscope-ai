@@ -1,0 +1,198 @@
+\
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<title>ViralScope AI</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--card:#141f31;--line:#293950;--muted:#a8b6c9;--accent:#54e0a2;--blue:#72a7ff}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#101c30,#080d17);color:#f5f7fb;font:15px system-ui,Arial,sans-serif}
+main{max-width:760px;margin:auto;padding:22px 16px 50px}.brand{font-size:13px;color:var(--accent);letter-spacing:2px;font-weight:800}
+h1{font-size:30px;margin:5px 0 6px}.sub{color:var(--muted);line-height:1.5;margin:0 0 20px}
+.card{background:rgba(20,31,49,.96);border:1px solid var(--line);border-radius:18px;padding:17px;margin:14px 0;box-shadow:0 12px 30px #0002}
+label{display:block;color:#dce6f5;font-size:13px;font-weight:650;margin:12px 0 6px}
+input,textarea{width:100%;border:1px solid #35465e;border-radius:11px;background:#0d1727;color:white;padding:12px;font:inherit;outline:none}
+input:focus,textarea:focus{border-color:var(--accent)}textarea{min-height:86px;resize:vertical}
+button{border:0;border-radius:12px;padding:13px 17px;background:var(--accent);color:#092016;font-weight:800;font-size:15px;width:100%;margin-top:14px}
+button:disabled{opacity:.5}.hint,.muted{color:var(--muted);font-size:12px;line-height:1.5}
+#status{margin-top:10px;color:var(--blue);font-size:13px}
+.video{display:grid;grid-template-columns:120px 1fr;gap:13px;align-items:start}
+.video img{width:120px;border-radius:10px;aspect-ratio:16/9;object-fit:cover}
+.video h2{font-size:16px;margin:0 0 6px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.stat{background:#0c1727;border:1px solid var(--line);border-radius:12px;padding:10px}.stat b{display:block;font-size:18px}.stat span{color:var(--muted);font-size:11px}
+.result h3{margin:0 0 9px;color:var(--accent);font-size:16px}.result ul{padding-left:20px;margin:7px 0}.result li{margin:7px 0;line-height:1.45}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tag{display:inline-block;border:1px solid #37516b;color:#c6dcff;padding:5px 9px;border-radius:30px;font-size:12px}
+a{color:#8db8ff}.hidden{display:none}.disclaimer{border-left:3px solid #e8b65b;padding:9px 11px;color:#d5c49f;font-size:12px;line-height:1.5}
+@media(max-width:430px){.grid{grid-template-columns:1fr}.video{grid-template-columns:95px 1fr}.video img{width:95px}.stats{gap:5px}.stat b{font-size:15px}}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">CREATOR TOOLKIT</div>
+  <h1>🚀 ViralScope AI</h1>
+  <p class="sub">YouTube video ka performance samjho, possible reasons dekho aur agle video ke liye practical improvement tips pao.</p>
+
+  <section class="card">
+    <label for="videoUrl">YouTube video link</label>
+    <input id="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." autocomplete="url">
+    <button id="fetchBtn">Video details dekho</button>
+    <div id="status" role="status"></div>
+  </section>
+
+  <section id="videoCard" class="card hidden">
+    <div class="video">
+      <img id="thumb" alt="YouTube video thumbnail">
+      <div><h2 id="title"></h2><div class="muted" id="channel"></div><p class="muted" id="published"></p><a id="ytLink" target="_blank" rel="noopener">YouTube par dekho ↗</a></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="views">—</b><span>Views (YouTube)</span></div>
+      <div class="stat"><b id="likes">—</b><span>Likes (agar public)</span></div>
+      <div class="stat"><b id="comments">—</b><span>Comments (agar public)</span></div>
+    </div>
+  </section>
+
+  <section id="analysisForm" class="card hidden">
+    <h2 style="margin:0 0 5px;font-size:19px">📊 Performance analysis</h2>
+    <p class="hint">Neeche YouTube Studio se apne video ke numbers bharo. Public link se impressions, CTR aur retention nahi milte.</p>
+    <div class="grid">
+      <div><label for="myViews">Is video ke current views</label><input id="myViews" type="number" min="0" placeholder="e.g. 12000"></div>
+      <div><label for="usualViews">Aapke normal video views</label><input id="usualViews" type="number" min="1" placeholder="e.g. 3000"></div>
+      <div><label for="ctr">Impressions click-through rate (%)</label><input id="ctr" type="number" min="0" max="100" step=".1" placeholder="e.g. 6.5"></div>
+      <div><label for="avgWatch">Average view duration (seconds)</label><input id="avgWatch" type="number" min="0" placeholder="e.g. 95"></div>
+      <div><label for="videoLength">Video length (seconds)</label><input id="videoLength" type="number" min="1" placeholder="e.g. 240"></div>
+      <div><label for="ageDays">Publish hue kitne din hue?</label><input id="ageDays" type="number" min="0" placeholder="e.g. 7"></div>
+    </div>
+    <label for="audience">Target audience / niche</label>
+    <input id="audience" placeholder="e.g. Hindi tech beginners">
+    <label for="summary">Video mein kya hai? Hook, topic aur content ka short summary</label>
+    <textarea id="summary" placeholder="Video ke first 5-15 seconds mein kya dikhaya? Viewer ko kya value milti hai?"></textarea>
+    <label for="goal">Aapka goal</label>
+    <input id="goal" placeholder="e.g. subscribers badhana, views, leads">
+    <button id="analyzeBtn">Mera performance analysis karo</button>
+  </section>
+
+  <section id="results" class="card result hidden" aria-live="polite"></section>
+  <p class="disclaimer">Note: Analysis creator ke manually diye gaye Studio metrics aur description par based heuristic hai. Ye YouTube ka official viral label, recommendation-system insight ya guaranteed prediction nahi hai. YouTube API ke public statistics ko sirf as-is dikhaya jata hai.</p>
+  <p class="hint">YouTube API use hoti hai. YouTube Terms aur Privacy Policy lagu hote hain. <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">YouTube Terms</a> · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy</a></p>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let currentVideo = null;
+const fmt = n => n == null ? "Hidden" : Number(n).toLocaleString("en-IN");
+const val = id => $(id).value.trim();
+
+$("fetchBtn").addEventListener("click", async () => {
+  const url = val("videoUrl");
+  if (!url) return $("status").textContent = "Pehle YouTube link paste karo.";
+  $("fetchBtn").disabled = true;
+  $("status").textContent = "Video details load ho rahi hain…";
+  $("videoCard").classList.add("hidden");
+  $("analysisForm").classList.add("hidden");
+  $("results").classList.add("hidden");
+  try {
+    const response = await fetch(`/api/video?url=${encodeURIComponent(url)}`);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Video load nahi hua.");
+    currentVideo = data;
+    $("thumb").src = data.thumbnail;
+    $("title").textContent = data.title;
+    $("channel").textContent = data.channelTitle;
+    $("published").textContent = data.publishedAt ? "Published: " + new Date(data.publishedAt).toLocaleDateString("hi-IN") : "";
+    $("views").textContent = fmt(data.statistics.viewCount);
+    $("likes").textContent = fmt(data.statistics.likeCount);
+    $("comments").textContent = fmt(data.statistics.commentCount);
+    $("ytLink").href = data.youtubeUrl;
+    $("videoCard").classList.remove("hidden");
+    $("analysisForm").classList.remove("hidden");
+    $("status").textContent = "Video mil gaya. Ab apne YouTube Studio metrics bharo.";
+  } catch (e) {
+    $("status").textContent = e.message;
+  } finally {
+    $("fetchBtn").disabled = false;
+  }
+});
+
+function addList(title, items) {
+  return `<h3>${title}</h3><ul>${items.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>`;
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+$("analyzeBtn").addEventListener("click", () => {
+  if (!currentVideo) return;
+  const views = Number(val("myViews"));
+  const usual = Number(val("usualViews"));
+  const ctr = val("ctr") === "" ? null : Number(val("ctr"));
+  const avg = val("avgWatch") === "" ? null : Number(val("avgWatch"));
+  const length = val("videoLength") === "" ? null : Number(val("videoLength"));
+  const age = val("ageDays") === "" ? null : Number(val("ageDays"));
+  const summary = val("summary");
+  const audience = val("audience");
+  const goal = val("goal");
+
+  if (!Number.isFinite(views) || views < 0 || !Number.isFinite(usual) || usual <= 0) {
+    $("results").innerHTML = "<h3>Do numbers zaroori hain</h3><p>Current video views aur aapke normal video views sahi bharo.</p>";
+    $("results").classList.remove("hidden"); return;
+  }
+
+  const ratio = views / usual;
+  let status, reasons = [], tips = [];
+  if (ratio >= 2) {
+    status = "Aapke normal performance se kaafi aage";
+    reasons.push("Aapke diye hue numbers ke mutabik views normal baseline ke kam-se-kam 2 guna hain.");
+    tips.push("Jo topic aur presentation kaam kar rahe hain, usi audience ke liye related follow-up video banao.");
+    tips.push("Comments mein genuine sawaalon ka jawab do aur agle video ka relevant suggestion do.");
+  } else if (ratio >= 0.7) {
+    status = "Normal performance ke aas-paas";
+    reasons.push("Views aapke diye hue channel baseline ke 70%–200% range mein hain.");
+    tips.push("Ek hi topic par naya angle, stronger opening aur clearer payoff test karo.");
+  } else {
+    status = "Aapke normal baseline se neeche";
+    reasons.push("Aapke diye hue numbers ke mutabik views normal baseline ke 70% se kam hain.");
+    tips.push("YouTube Studio mein traffic source aur audience retention graph check karo; sabse bade drop-off point ko improve karo.");
+  }
+
+  if (ctr !== null && Number.isFinite(ctr)) {
+    if (ctr < 3) { reasons.push("Aapka manually diya CTR 3% se kam hai; thumbnail-title packaging par kaam karna useful ho sakta hai."); tips.push("Thumbnail ko ek clear visual idea tak simplify karo aur title mein viewer ka specific benefit batao."); }
+    else if (ctr >= 7) { reasons.push("Aapka manually diya CTR 7% ya usse zyada hai; packaging viewers ko click karne ke liye attract kar rahi ho sakti hai."); tips.push("Thumbnail-title ka promise video ke opening mein jaldi deliver karo."); }
+    else { reasons.push("CTR 3%–7% ke beech hai; is metric ko traffic source ke context mein dekho."); }
+  } else {
+    tips.push("CTR share karoge to thumbnail aur title ke performance par zyada useful feedback mil sakta hai.");
+  }
+
+  if (avg !== null && length !== null && Number.isFinite(avg) && Number.isFinite(length) && length > 0) {
+    const retention = avg / length * 100;
+    if (retention < 25) { reasons.push("Aapke entered average view duration ke hisaab se average watched share 25% se kam hai."); tips.push("Intro chhota rakho, pehle 5–15 seconds mein result ya main promise dikhao, lambi greeting hatao."); }
+    else if (retention >= 50) { reasons.push("Entered average view duration video length ka 50% ya zyada hai."); tips.push("Jo pacing aur storytelling audience ko roke hue hai, use agle related video mein bhi test karo."); }
+    else { reasons.push("Entered average watched share 25%–50% hai; retention graph ke drop-off points dekho."); }
+  } else {
+    tips.push("Average view duration aur video length enter karke audience retention par feedback lo.");
+  }
+
+  if (summary.length < 35) {
+    reasons.push("Content summary bahut chhoti hai, isliye topic, hook aur value proposition ko judge karna mushkil hai.");
+    tips.push("Summary mein opening hook, main benefit aur video ka unique angle clearly likho.");
+  } else {
+    tips.push("Opening mein audience ki problem ya desired result seedha bolo; phir proof/example dikhao.");
+  }
+  if (!audience) tips.push("Target audience ko ek line mein define karo; sabko target karne se message generic ho sakta hai.");
+  if (age !== null && age < 3) tips.push("Video naya hai: final judgement se pehle kuch aur din ka data aur traffic-source trend dekho.");
+  if (goal) tips.push(`Har next video ka CTA apne goal (“${goal}”) ke saath relevant rakho.`);
+
+  const html = `<span class="tag">Creator-entered metrics analysis</span>
+    <h2 style="font-size:20px;margin:12px 0 5px">${escapeHtml(status)}</h2>
+    <p class="muted">Views vs usual views: ${ratio.toFixed(2)}x · Ye comparison sirf aapke manually entered numbers se nikala gaya hai.</p>
+    ${addList("Possible reasons", reasons)}
+    ${addList("Actionable tips", [...new Set(tips)])}
+    <p class="hint">Audience: ${escapeHtml(audience || "Not provided")} · Video: ${escapeHtml(currentVideo.title)}</p>`;
+  $("results").innerHTML = html;
+  $("results").classList.remove("hidden");
+  $("results").scrollIntoView({behavior:"smooth",block:"start"});
+});
+</script>
+</body>
+</html>
