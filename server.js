@@ -9,6 +9,24 @@ const API_KEY = process.env.YOUTUBE_API_KEY;
 app.use(express.json({ limit: "32kb" }));
 app.use(express.static(path.join(__dirname, "public")));
 
+// Allow the installed APK's Capacitor WebView to call this API cross-origin.
+// Without this, fetch() from the app (origin https://localhost on the device) is blocked.
+const ALLOWED_ORIGINS = new Set([
+  "https://localhost",
+  "http://localhost",
+  "capacitor://localhost"
+]);
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.has(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  }
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
+
+
 function extractVideoId(input) {
   try {
     const url = new URL(input.trim());
